@@ -11,4 +11,4 @@ before_install:
   - npm install -g bower
   - bower install
   - npm install -g npm@'>=3.0.0'
-script: gulp test:saucelabs
+script: travis_wait gulp test:saucelabs
