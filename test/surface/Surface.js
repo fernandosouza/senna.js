@@ -200,7 +200,11 @@ describe('Surface', function() {
 
 		it('should transition deferred be cancellable', (done) => {
 			var surface = new Surface('surfaceId');
-			var transitionFn = () => CancellablePromise.resolve();
+			var transitionFn = () => {
+				return new CancellablePromise(function(resolve, reject) {
+					window.setTimeout(reject, 200);
+				});
+			};
 			surface.setTransitionFn(transitionFn);
 			surface.transition(null, null).catch(() => done()).cancel();
 		});
