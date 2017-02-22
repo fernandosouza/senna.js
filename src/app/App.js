@@ -860,19 +860,27 @@ class App extends EventEmitter {
 			path: event.path
 		};
 
-		this.pendingNavigate = this.doNavigate_(event.path, event.replaceHistory)
-			.catch((reason) => {
-				endNavigatePayload.error = reason;
-				throw reason;
-			})
-			.thenAlways(() => {
-				if (!this.pendingNavigate) {
-					dom.removeClasses(globals.document.documentElement, this.loadingCssClass);
-					this.maybeRestoreNativeScrollRestoration();
-					this.captureScrollPositionFromScrollEvent = true;
-				}
-				this.emit('endNavigate', endNavigatePayload);
-			});
+    this.pendingNavigate = new CancellablePromise((resolve, reject) => {
+        this.doNavigate_(event.path, event.replaceHistory)
+          .catch((reason) => {
+            reject(reason);
+          })
+          .then(() => {
+            resolve();
+          });
+      })
+      .catch(reason => {
+        endNavigatePayload.error = reason;
+        throw reason;
+      })
+      .thenAlways(() => {
+        if (!this.pendingNavigate) {
+          dom.removeClasses(globals.document.documentElement, this.loadingCssClass);
+          this.maybeRestoreNativeScrollRestoration();
+          this.captureScrollPositionFromScrollEvent = true;
+        }
+        this.emit('endNavigate', endNavigatePayload);
+      });
 
 		this.pendingNavigate.path = event.path;
 	}

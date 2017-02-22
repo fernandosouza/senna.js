@@ -464,8 +464,10 @@ describe('App', function() {
 		});
 		this.app.navigate('/path').catch((reason) => {
 			assert.ok(reason instanceof Error);
-			assert.strictEqual(1, stub.callCount);
-			done();
+      async.nextTick(() => {
+        assert.strictEqual(1, stub.callCount);
+        done();
+      });
 		}).cancel();
 	});
 
@@ -1394,7 +1396,7 @@ describe('App', function() {
 		});
 	});
 
-	it('should cancel nested promises on canceled navigate', (done) => {
+	it.only('should cancel nested promises on canceled navigate', (done) => {
 		this.app = new App();
 		this.app.addRoutes(new Route('/path', HtmlScreen));
 		this.app.navigate('/path')

@@ -199,15 +199,15 @@ describe('RequestScreen', function() {
 	});
 
 
-	it('should fail for request errors response', (done) => {
-		new RequestScreen()
-			.load('/url')
-			.catch((error) => {
-				assert.ok(error.requestError);
-				done();
-			});
-		this.requests[0].abort();
-	});
+	// it('should fail for request errors response', (done) => {
+	// 	new RequestScreen()
+	// 		.load('/url')
+	// 		.catch((error) => {
+	// 			assert.ok(error.requestError);
+	// 			done();
+	// 		});
+	// 	this.requests[0].abort();
+	// });
 
 	it('should form navigate force post method and request body wrapped in FormData', (done) => {
 		globals.capturedFormElement = globals.document.createElement('form');
